@@ -2,6 +2,7 @@ import { readFile, writeFile } from "node:fs/promises";
 
 const papers = JSON.parse(await readFile(new URL("../data/papers.json", import.meta.url), "utf8"));
 const generationResources = JSON.parse(await readFile(new URL("../data/generation-resources.json", import.meta.url), "utf8"));
+const extraSurveys = JSON.parse(await readFile(new URL("../data/surveys.json", import.meta.url), "utf8"));
 const checkOnly = process.argv.includes("--check");
 const lastUpdated = "2026-08-13";
 
@@ -22,21 +23,13 @@ const taxonomy = [
     id: "multimodal-table-understanding-reasoning",
     icon: "🧠",
     title: "2. Multimodal Table Understanding & Reasoning",
-    description: "Methods that answer questions, calculate, reason, retrieve evidence, or align visual tables with structured representations.",
+    description: "Visual and multimodal methods for answering, calculating, retrieving, grounding, and reasoning over standard and complex tables.",
     children: [
       ["table-question-answering", "Table Question Answering"],
       ["numerical-symbolic-reasoning", "Numerical & Symbolic Reasoning"],
       ["hybrid-visual-textual-reasoning", "Hybrid Visual–Textual Reasoning"],
       ["retrieval-rag", "Retrieval & RAG"],
-      ["grounding-attribution", "Grounding & Attribution"]
-    ]
-  },
-  {
-    id: "multimodal-complex-tables",
-    icon: "🧩",
-    title: "3. Multimodal & Complex Tables",
-    description: "Methods centered on non-standard table settings where multimodal cells, domain structure, hierarchy, multiple tables, or real-world capture are the main challenge.",
-    children: [
+      ["grounding-attribution", "Grounding & Attribution"],
       ["image-graphic-cells", "Image / Graphic Cells"],
       ["scientific-tables", "Scientific Tables"],
       ["hierarchical-tables", "Hierarchical Tables"],
@@ -47,7 +40,7 @@ const taxonomy = [
   {
     id: "multimodal-table-data-generation",
     icon: "🏭",
-    title: "4. Multimodal Table Data Generation",
+    title: "3. Multimodal Table Data Generation",
     description: "Pipelines and tools for creating table contents, schemas, rendered pixels, instructions, and validated synthetic training data.",
     children: [
       ["structured-content-generation", "Structured Content Generation"],
@@ -61,7 +54,7 @@ const taxonomy = [
   {
     id: "benchmarks-datasets",
     icon: "🧪",
-    title: "5. Benchmarks & Datasets",
+    title: "4. Benchmarks & Datasets",
     description: "Datasets and benchmark suites for recognition, understanding, robustness, and multimodal table settings.",
     children: [
       ["benchmark-recognition", "Recognition"],
@@ -73,7 +66,7 @@ const taxonomy = [
   {
     id: "evaluation-analysis",
     icon: "📏",
-    title: "6. Evaluation & Analysis",
+    title: "5. Evaluation & Analysis",
     description: "Metrics, controlled evaluations, representation studies, and analyses of robustness and generalization.",
     children: [
       ["metrics", "Metrics"],
@@ -85,8 +78,8 @@ const taxonomy = [
   {
     id: "surveys",
     icon: "📖",
-    title: "7. Surveys",
-    description: "Surveys and reviews of table detection, recognition, extraction, and multimodal table understanding.",
+    title: "6. Surveys",
+    description: "Surveys of table recognition, table pre-training, table reasoning, TableQA, and LLM/VLM-based table processing.",
     children: [["survey", "Surveys"]]
   }
 ];
@@ -109,8 +102,8 @@ const esc = (value = "") => String(value).replaceAll("|", "\\|");
 const link = (label, url) => `[${label}](${url})`;
 const byNewest = (a, b) => b.year - a.year || a.title.localeCompare(b.title);
 const text = (paper) => `${paper.id} ${paper.title} ${paper.note}`.toLowerCase();
-const hasTask = (paper, task) => paper.tasks.includes(task);
-const hasInput = (paper, input) => paper.inputs.includes(input);
+const hasTask = (paper, task) => paper.tasks?.includes(task) ?? false;
+const hasInput = (paper, input) => paper.inputs?.includes(input) ?? false;
 const hasAny = (value, needles) => needles.some((needle) => value.includes(needle));
 
 function resourceLinks(paper) {
@@ -176,7 +169,7 @@ function classifyEvaluation(paper) {
 }
 
 function classify(paper) {
-  if (paper.category === "adjacent") return "related";
+  if (paper.category === "adjacent") return "related-work";
   if (paper.category === "data-generation") return classifyGeneration(paper);
   if (paper.category === "benchmarks-datasets") return classifyBenchmark(paper);
   if (paper.category === "recognition-extraction") return classifyRecognition(paper);
@@ -191,33 +184,37 @@ for (const section of taxonomy) for (const [child] of section.children) childToP
 const assignments = new Map();
 for (const paper of papers) {
   const child = classify(paper);
-  if (child !== "related" && !childToParent.has(child)) throw new Error(`Unknown taxonomy child ${child} for ${paper.id}`);
+  if (child !== "related-work" && !childToParent.has(child)) throw new Error(`Unknown taxonomy child ${child} for ${paper.id}`);
   if (assignments.has(paper.id)) throw new Error(`Paper classified twice: ${paper.id}`);
   assignments.set(paper.id, child);
 }
 if (assignments.size !== papers.length) throw new Error(`Classification coverage mismatch: ${assignments.size}/${papers.length}`);
 
-const corePapers = papers.filter((paper) => assignments.get(paper.id) !== "related");
-const relatedPapers = papers.filter((paper) => assignments.get(paper.id) === "related");
-if (corePapers.length + relatedPapers.length !== papers.length) throw new Error("Paper coverage mismatch");
-
+const mainPapers = papers.filter((paper) => assignments.get(paper.id) !== "related-work");
+const relatedPapers = papers.filter((paper) => assignments.get(paper.id) === "related-work");
+const existingSurveys = mainPapers.filter((paper) => assignments.get(paper.id) === "survey");
+const surveyPapers = [...existingSurveys, ...extraSurveys].sort(byNewest);
+const allCount = papers.length + extraSurveys.length;
 const codeCount = papers.filter((paper) => paper.code).length;
 const dataCount = papers.filter((paper) => paper.data).length;
-const countsByYear = [...new Set(papers.map((paper) => paper.year))]
-  .sort((a, b) => b - a)
-  .map((year) => `${year}: **${papers.filter((paper) => paper.year === year).length}**`)
-  .join(" · ");
 
 function renderPaperTable(items) {
-  if (!items.length) return "_No papers in this subsection yet._";
   return `| Year | Paper | Venue | Why it matters | Resources |\n|---:|---|---|---|---|\n${items.sort(byNewest).map(paperRow).join("\n")}`;
 }
 
+function itemsForChild(childId) {
+  if (childId === "survey") return surveyPapers;
+  return mainPapers.filter((paper) => assignments.get(paper.id) === childId);
+}
+
 function renderTaxonomySection(section) {
-  const childBlocks = section.children.map(([childId, childTitle]) => {
-    const items = corePapers.filter((paper) => assignments.get(paper.id) === childId);
-    return `<a id="${childId}"></a>\n### ${childTitle}\n\n${renderPaperTable(items)}`;
-  });
+  const nonEmptyChildren = section.children
+    .map(([childId, childTitle]) => [childId, childTitle, itemsForChild(childId)])
+    .filter(([, , items]) => items.length > 0);
+
+  const childBlocks = nonEmptyChildren.map(([childId, childTitle, items]) =>
+    `<a id="${childId}"></a>\n### ${childTitle}\n\n${renderPaperTable(items)}`
+  );
 
   if (section.id === "multimodal-table-data-generation") {
     const resourceBlocks = section.children.map(([childId, childTitle]) => {
@@ -229,14 +226,22 @@ function renderTaxonomySection(section) {
     childBlocks.push(`<a id="generation-tools"></a>\n### Practical Generators & Toolkits\n\nProjects are grouped under the same production stages as the papers above, so the literature and runnable resources stay in one place.\n\n${resourceBlocks.join("\n\n")}`);
   }
 
-  const count = corePapers.filter((paper) => childToParent.get(assignments.get(paper.id)) === section.id).length;
+  const count = section.id === "surveys"
+    ? surveyPapers.length
+    : nonEmptyChildren.reduce((sum, [, , items]) => sum + items.length, 0);
+
   return `<a id="${section.id}"></a>\n## ${section.icon} ${section.title}\n\n> ${section.description} **${count} papers.**\n\n${childBlocks.join("\n\n")}\n\n<p align="right"><a href="#readme-top">⬆️ Back to top</a></p>`;
 }
 
 const toc = taxonomy.map((section) => {
-  const children = section.children.map(([id, title]) => `  - [${title}](#${id})`).join("\n");
-  return `- [${section.icon} ${section.title}](#${section.id})\n${children}`;
+  const children = section.children
+    .filter(([childId]) => itemsForChild(childId).length > 0 || section.id === "multimodal-table-data-generation")
+    .map(([id, title]) => `  - [${title}](#${id})`).join("\n");
+  return `- [${section.icon} ${section.title}](#${section.id})${children ? `\n${children}` : ""}`;
 }).join("\n");
+
+const relatedRows = relatedPapers.sort(byNewest).map(paperRow).join("\n");
+const relatedLists = `- [Awesome-Tabular-LLMs](https://github.com/SpursGoZmy/Awesome-Tabular-LLMs) — broad table + LLM coverage.\n- [Awesome-LLM-Table-Mining](https://github.com/USTCAGI/Awesome-LLM-Table-Mining) — table mining with language models.\n- [Curated Table Structure Recognition](https://github.com/qyhou/curated-table-structure-recognition) — focused TSR bibliography.\n- [Awesome Table Structure Recognition](https://github.com/Tan-Junwen/awesome-table-structure-recognition) — TSR papers, datasets, and implementations.`;
 
 const readme = `<a id="readme-top"></a>
 
@@ -247,86 +252,50 @@ const readme = `<a id="readme-top"></a>
   <p>Table perception · structure recognition · multimodal reasoning · complex tables · synthetic training data</p>
   <p>
     <a href="https://awesome.re"><img src="https://awesome.re/badge-flat2.svg" alt="Awesome" /></a>
-    <img src="https://img.shields.io/badge/papers-${papers.length}-2F81F7?style=flat-square" alt="${papers.length} papers" />
+    <img src="https://img.shields.io/badge/papers-${allCount}-2F81F7?style=flat-square" alt="${allCount} papers" />
     <img src="https://img.shields.io/badge/code-${codeCount}-12B886?style=flat-square" alt="${codeCount} code links" />
     <img src="https://img.shields.io/badge/data-${dataCount}-D6336C?style=flat-square" alt="${dataCount} data links" />
     <img src="https://img.shields.io/badge/generators-${generationResources.length}-E8590C?style=flat-square" alt="${generationResources.length} generation projects" />
     <img src="https://img.shields.io/badge/coverage-2022%E2%80%932026-F59F00?style=flat-square" alt="Coverage 2022 to 2026" />
     <a href="https://github.com/lyc61c/Awesome-Multimodal-Table-Understanding/actions/workflows/validate.yml"><img src="https://github.com/lyc61c/Awesome-Multimodal-Table-Understanding/actions/workflows/validate.yml/badge.svg" alt="Validate" /></a>
-    <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC0--1.0-lightgrey?style=flat-square" alt="CC0 1.0" /></a>
   </p>
-  <p><a href="#papers">📚 Papers</a> · <a href="RELATED.md">🔗 Related Work</a> · <a href="CONTRIBUTING.md">🤝 Contribute</a></p>
+  <p><a href="#papers">📚 Papers</a> · <a href="#related-work">🔗 Related Work</a></p>
 </div>
 
-> **Updated ${lastUpdated}.** ${papers.length} papers · ${corePapers.length} core · ${relatedPapers.length} related · ${generationResources.length} practical generation projects. ${countsByYear}.
+> **Updated ${lastUpdated}.** ${allCount} papers · ${generationResources.length} practical generation projects.
 
 <a id="papers"></a>
 ## 📚 Papers
 
 ${toc}
+- [🔗 Related Work](#related-work)
 
 ${taxonomy.map(renderTaxonomySection).join("\n\n")}
 
+<a id="related-work"></a>
 ## 🔗 Related Work
 
-General document AI, text-only table reasoning, heterogeneous multimodal QA, and other useful adjacent work are kept in **[RELATED.md](RELATED.md)** so the main bibliography stays focused.
-
-<a id="contributing"></a>
-## 🤝 Contributing
-
-Found a missing paper, better official link, released code, or venue update? Please read [CONTRIBUTING.md](CONTRIBUTING.md) and open a pull request or use the paper-suggestion issue form.
-
-The sources of truth are [data/papers.json](data/papers.json) and [data/generation-resources.json](data/generation-resources.json). README and RELATED.md are generated automatically, and the build fails if any paper is left unclassified or classified more than once.
-
-## 🙏 Acknowledgements
-
-The information architecture draws on the clarity of [Awesome](https://github.com/sindresorhus/awesome), [Awesome Python](https://github.com/vinta/awesome-python), and the navigation patterns collected in [Awesome README](https://github.com/matiassingers/awesome-readme). Thanks to the maintainers of related table-paper lists and to authors who release code or data.
-
-## 📜 License
-
-Released under [CC0 1.0](LICENSE). Paper abstracts, figures, datasets, and code remain under their original licenses.
-
-<div align="center">
-  <p><strong>If this map saves you time, consider starring it and contributing the paper we missed.</strong></p>
-  <a href="#readme-top">⬆️ Back to top</a>
-</div>
-`;
-
-const relatedRows = relatedPapers.sort(byNewest).map(paperRow).join("\n");
-const related = `# Related Work
-
-This page keeps useful adjacent literature outside the core visual-table taxonomy. These papers are preserved rather than removed, but they are not counted as core multimodal table papers.
+Useful adjacent literature is kept directly in the main README for completeness while remaining visually separated from the core taxonomy. **${relatedPapers.length} papers.**
 
 | Year | Paper | Venue | Why it matters | Resources |
 |---:|---|---|---|---|
 ${relatedRows}
 
-## Related Lists
+### Related Lists
 
-- [Awesome-Tabular-LLMs](https://github.com/SpursGoZmy/Awesome-Tabular-LLMs) — broad table + LLM coverage.
-- [Awesome-LLM-Table-Mining](https://github.com/USTCAGI/Awesome-LLM-Table-Mining) — table mining with language models.
-- [Curated Table Structure Recognition](https://github.com/qyhou/curated-table-structure-recognition) — focused TSR bibliography.
-- [Awesome Table Structure Recognition](https://github.com/Tan-Junwen/awesome-table-structure-recognition) — TSR papers, datasets, and implementations.
+${relatedLists}
 
-[← Back to README](README.md)
+<div align="center"><a href="#readme-top">⬆️ Back to top</a></div>
 `;
 
-const outputs = [
-  [new URL("../README.md", import.meta.url), readme, "README.md"],
-  [new URL("../RELATED.md", import.meta.url), related, "RELATED.md"]
-];
-
+const readmeUrl = new URL("../README.md", import.meta.url);
 if (checkOnly) {
-  let stale = false;
-  for (const [url, expected, name] of outputs) {
-    const current = await readFile(url, "utf8").catch(() => "");
-    if (current !== expected) {
-      console.error(`${name} is out of date. Run: npm run build`);
-      stale = true;
-    }
+  const current = await readFile(readmeUrl, "utf8").catch(() => "");
+  if (current !== readme) {
+    console.error("README.md is out of date. Run: npm run build");
+    process.exit(1);
   }
-  if (stale) process.exit(1);
 } else {
-  for (const [url, content] of outputs) await writeFile(url, content);
-  console.log(`Generated README.md and RELATED.md with ${corePapers.length} core papers and ${relatedPapers.length} related papers; every paper classified exactly once.`);
+  await writeFile(readmeUrl, readme);
+  console.log(`Generated README.md with ${allCount} papers; ${relatedPapers.length} related papers merged into the main README.`);
 }
