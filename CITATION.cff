@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If this bibliography helps your research, please cite the repository and the original papers you use."
+title: "Awesome Multimodal Table Understanding"
+type: dataset
+authors:
+  - family-names: "Lyc"
+repository-code: "https://github.com/lyc61c/Awesome-Multimodal-Table-Understanding"
+license: CC0-1.0
+date-released: 2026-08-13
