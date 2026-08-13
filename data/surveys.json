@@ -1,0 +1,42 @@
+[
+  {
+    "id": "llm-table-processing-survey",
+    "year": 2025,
+    "title": "Large Language Model for Table Processing: A Survey",
+    "venue": "Frontiers of Computer Science",
+    "paper": "https://doi.org/10.1007/s11704-024-40763-6",
+    "note": "Surveys LLM- and VLM-based table processing across question answering, image-table extraction, spreadsheet manipulation, training, prompting, and agents."
+  },
+  {
+    "id": "tabular-data-understanding-llm-survey",
+    "year": 2025,
+    "title": "Tabular Data Understanding with LLMs: A Survey of Recent Advances and Challenges",
+    "venue": "arXiv",
+    "paper": "https://arxiv.org/abs/2508.00217",
+    "note": "Organizes tabular representations and understanding tasks while highlighting complex structures, multimodal inputs, long tables, and multi-table reasoning."
+  },
+  {
+    "id": "table-qa-llm-survey",
+    "year": 2025,
+    "title": "Table Question Answering in the Era of Large Language Models: A Comprehensive Survey of Tasks, Methods, and Evaluation",
+    "venue": "arXiv",
+    "paper": "https://arxiv.org/abs/2510.09671",
+    "note": "Reviews TableQA task formulations, benchmarks, reasoning challenges, LLM methods, evaluation practices, and emerging reinforcement-learning directions."
+  },
+  {
+    "id": "table-reasoning-llm-survey",
+    "year": 2024,
+    "title": "A Survey of Table Reasoning with Large Language Models",
+    "venue": "arXiv",
+    "paper": "https://arxiv.org/abs/2402.08259",
+    "note": "Surveys LLM-era table reasoning techniques, analyzes why LLMs improve tabular reasoning, and outlines methodological and application-oriented research directions."
+  },
+  {
+    "id": "table-pretraining-survey",
+    "year": 2022,
+    "title": "Table Pre-training: A Survey on Model Architectures, Pre-training Objectives, and Downstream Tasks",
+    "venue": "IJCAI Survey Track",
+    "paper": "https://www.ijcai.org/proceedings/2022/761",
+    "note": "Reviews table pre-training architectures, objectives, and downstream tasks including question answering, table search, relation classification, and formula prediction."
+  }
+]
