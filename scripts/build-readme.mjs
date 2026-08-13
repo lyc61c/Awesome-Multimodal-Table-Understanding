@@ -5,63 +5,98 @@ const generationResources = JSON.parse(await readFile(new URL("../data/generatio
 const checkOnly = process.argv.includes("--check");
 const lastUpdated = "2026-08-13";
 
-const categoryOrder = [
-  "multimodal-reasoning",
-  "data-generation",
-  "benchmarks-datasets",
-  "recognition-extraction",
-  "analysis-evaluation",
-  "adjacent"
+const taxonomy = [
+  {
+    id: "visual-table-perception-recognition",
+    icon: "🔎",
+    title: "1. Visual Table Perception & Recognition",
+    description: "Methods that locate tables, recover topology, recognize cell content, or reconstruct structured markup from pixels.",
+    children: [
+      ["table-detection", "Table Detection"],
+      ["table-structure-recognition", "Table Structure Recognition"],
+      ["cell-content-recognition", "Cell & Content Recognition"],
+      ["end-to-end-reconstruction", "End-to-End Reconstruction / Image-to-Markup"]
+    ]
+  },
+  {
+    id: "multimodal-table-understanding-reasoning",
+    icon: "🧠",
+    title: "2. Multimodal Table Understanding & Reasoning",
+    description: "Methods that answer questions, calculate, reason, retrieve evidence, or align visual tables with structured representations.",
+    children: [
+      ["table-question-answering", "Table Question Answering"],
+      ["numerical-symbolic-reasoning", "Numerical & Symbolic Reasoning"],
+      ["hybrid-visual-textual-reasoning", "Hybrid Visual–Textual Reasoning"],
+      ["retrieval-rag", "Retrieval & RAG"],
+      ["grounding-attribution", "Grounding & Attribution"]
+    ]
+  },
+  {
+    id: "multimodal-complex-tables",
+    icon: "🧩",
+    title: "3. Multimodal & Complex Tables",
+    description: "Methods centered on non-standard table settings where multimodal cells, domain structure, hierarchy, multiple tables, or real-world capture are the main challenge.",
+    children: [
+      ["image-graphic-cells", "Image / Graphic Cells"],
+      ["scientific-tables", "Scientific Tables"],
+      ["hierarchical-tables", "Hierarchical Tables"],
+      ["multi-table-reasoning", "Multi-table Reasoning"],
+      ["real-world-photographed-tables", "Real-world / Photographed Tables"]
+    ]
+  },
+  {
+    id: "multimodal-table-data-generation",
+    icon: "🏭",
+    title: "4. Multimodal Table Data Generation",
+    description: "Pipelines and tools for creating table contents, schemas, rendered pixels, instructions, and validated synthetic training data.",
+    children: [
+      ["structured-content-generation", "Structured Content Generation"],
+      ["schema-layout-generation", "Schema & Layout Generation"],
+      ["markup-to-image-rendering", "Markup-to-Image Rendering"],
+      ["direct-image-generation", "Direct Image Generation"],
+      ["qa-instruction-generation", "QA / Instruction Generation"],
+      ["augmentation-validation", "Augmentation & Validation"]
+    ]
+  },
+  {
+    id: "benchmarks-datasets",
+    icon: "🧪",
+    title: "5. Benchmarks & Datasets",
+    description: "Datasets and benchmark suites for recognition, understanding, robustness, and multimodal table settings.",
+    children: [
+      ["benchmark-recognition", "Recognition"],
+      ["benchmark-understanding-reasoning", "Understanding & Reasoning"],
+      ["benchmark-real-world-robustness", "Real-world / Robustness"],
+      ["benchmark-multimodal-tables", "Multimodal Tables"]
+    ]
+  },
+  {
+    id: "evaluation-analysis",
+    icon: "📏",
+    title: "6. Evaluation & Analysis",
+    description: "Metrics, controlled evaluations, representation studies, and analyses of robustness and generalization.",
+    children: [
+      ["metrics", "Metrics"],
+      ["evaluation-protocols", "Evaluation Protocols"],
+      ["representation-analysis", "Representation Analysis"],
+      ["robustness-generalization", "Robustness / Generalization"]
+    ]
+  },
+  {
+    id: "surveys",
+    icon: "📖",
+    title: "7. Surveys",
+    description: "Surveys and reviews of table detection, recognition, extraction, and multimodal table understanding.",
+    children: [["survey", "Surveys"]]
+  }
 ];
 
-const categories = {
-  "multimodal-reasoning": {
-    icon: "🧠",
-    title: "Multimodal reasoning, QA, and training",
-    description: "Models and training methods that answer, calculate, retrieve, or reason from visual and hybrid tables."
-  },
-  "data-generation": {
-    icon: "🏭",
-    title: "Synthetic data generation and rendering",
-    description: "Pipelines that synthesize table content or structure, render markup into pixels, generate instructions, or create images directly."
-  },
-  "benchmarks-datasets": {
-    icon: "🧪",
-    title: "Benchmarks and datasets",
-    description: "Evaluation suites, training corpora, and diagnostic datasets built around table pixels or multimodal cells."
-  },
-  "recognition-extraction": {
-    icon: "🔎",
-    title: "Recognition, parsing, and extraction",
-    description: "Table detection, OCR, cell topology, image-to-markup, and end-to-end reconstruction."
-  },
-  "analysis-evaluation": {
-    icon: "📏",
-    title: "Analysis, evaluation, metrics, and surveys",
-    description: "Controlled comparisons, robustness studies, metrics, uncertainty, reproducibility, and field surveys."
-  },
-  adjacent: {
-    icon: "🧩",
-    title: "Adjacent multimodal and document-table work",
-    description: "Closely related document, screenshot, retrieval, and cross-modal research with substantive table relevance."
-  }
-};
-
-const inputLabels = {
-  TI: "table image",
-  DP: "document page",
-  SS: "screenshot or dashboard",
-  IM: "images or graphics inside/alongside tables",
-  SR: "synthetically rendered table",
-  TT: "paired text, markup, or privileged structure"
-};
-
-const generationStageLabels = {
-  "content-structure": "🧬 Content & structure",
-  "markup-rendering": "🎨 Markup & rendering",
-  "direct-image": "🖼️ Direct image generation",
-  "instruction-qa": "💬 Instructions & QA",
-  "augmentation-validation": "🛡️ Augmentation & validation"
+const generationStageToChild = {
+  "content-structure": "structured-content-generation",
+  "markup-rendering": "markup-to-image-rendering",
+  "direct-image": "direct-image-generation",
+  "instruction-qa": "qa-instruction-generation",
+  "augmentation-validation": "augmentation-validation"
 };
 
 const provenanceLabels = {
@@ -70,10 +105,13 @@ const provenanceLabels = {
   community: "community project"
 };
 
-const esc = (value) => value.replaceAll("|", "\\|");
-const codeTag = (tag) => `\`${tag}\``;
+const esc = (value = "") => String(value).replaceAll("|", "\\|");
 const link = (label, url) => `[${label}](${url})`;
 const byNewest = (a, b) => b.year - a.year || a.title.localeCompare(b.title);
+const text = (paper) => `${paper.id} ${paper.title} ${paper.note}`.toLowerCase();
+const hasTask = (paper, task) => paper.tasks.includes(task);
+const hasInput = (paper, input) => paper.inputs.includes(input);
+const hasAny = (value, needles) => needles.some((needle) => value.includes(needle));
 
 function resourceLinks(paper) {
   const links = [];
@@ -84,63 +122,120 @@ function resourceLinks(paper) {
 }
 
 function paperRow(paper) {
-  const tags = [...paper.inputs, ...paper.tasks].map(codeTag).join(" ");
   const note = paper.alias ? `${paper.note} Formerly **${paper.alias}**.` : paper.note;
-  const title = `**${link(esc(paper.title), paper.paper)}**`;
-  return `| ${paper.year} | ${title} | ${esc(paper.venue)} | ${tags} | ${esc(note)} | ${resourceLinks(paper)} |`;
+  return `| ${paper.year} | **${link(esc(paper.title), paper.paper)}** | ${esc(paper.venue)} | ${esc(note)} | ${resourceLinks(paper)} |`;
 }
 
+function classifyGeneration(paper) {
+  const t = text(paper);
+  if (hasAny(t, ["why llms are bad", "augmentation", "stress", "validate", "verification", "graft:"])) return "augmentation-validation";
+  if (hasAny(t, ["tabledreamer", "syntab-llava", "tabularmath", "autot2t"])) return "qa-instruction-generation";
+  if (hasAny(t, ["latent diffusion", "diffusion models for document image", "realistic data for table recognition", "table and image generation"])) return "direct-image-generation";
+  if (hasAny(t, ["cosyn", "code-guided synthetic", "μgat", "mugat", "flexdoc"])) return "markup-to-image-rendering";
+  if (hasAny(t, ["tablenet:", "map&make", "text-tuple-table", "text-to-table:"])) return "schema-layout-generation";
+  return "structured-content-generation";
+}
+
+function classifyRecognition(paper) {
+  const t = text(paper);
+  if (hasTask(paper, "DETECT") && !hasAny(t, ["end-to-end", "reconstruction", "recognition and structure", "table extraction"])) return "table-detection";
+  if (hasAny(t, ["latex", "html", "image-to-markup", "reconstruction", "reconstructed", "end-to-end", "unified generation", "tables decoded", "tables to latex", "table reconstruction", "tableseq", "tdatr", "dream:", "unitable:", "omniparser"])) return "end-to-end-reconstruction";
+  if (hasTask(paper, "OCR") && hasAny(t, ["content", "character", "ocr", "text spotting", "cell recognition"])) return "cell-content-recognition";
+  return "table-structure-recognition";
+}
+
+function classifyReasoning(paper) {
+  const t = text(paper);
+  if (hasInput(paper, "IM") || hasAny(t, ["image cells", "graphic cells", "semi-structured tables"])) return "image-graphic-cells";
+  if (hasAny(t, ["scientific table", "scientific tables"])) return "scientific-tables";
+  if (hasAny(t, ["hierarchical table", "hierarchical tables"])) return "hierarchical-tables";
+  if (hasAny(t, ["multi-table", "multi tabular", "multi-tabular", "multiple table"])) return "multi-table-reasoning";
+  if (hasAny(t, ["photographed", "in the wild", "real-world table", "camera-captured", "scene table"])) return "real-world-photographed-tables";
+  if (hasTask(paper, "RETRIEVE") || hasAny(t, ["retrieval", "rag:", "tabrag"])) return "retrieval-rag";
+  if (hasAny(t, ["attribution", "evidence localization", "grounding", "supporting cells"])) return "grounding-attribution";
+  if (hasAny(t, ["hybrid", "privileged structured", "visual and textual", "visual or textual", "text table representations", "routing", "modality"]) || (hasInput(paper, "TT") && hasTask(paper, "QA"))) return "hybrid-visual-textual-reasoning";
+  if (hasAny(t, ["code-driven", "code-based", "neuro-symbolic", "symbolic", "mathematical", "numerical", "calculate", "calculation", "arithmetic"])) return "numerical-symbolic-reasoning";
+  return "table-question-answering";
+}
+
+function classifyBenchmark(paper) {
+  const t = text(paper);
+  if (hasInput(paper, "IM") || hasAny(t, ["multimodal table", "chemical tables", "embedded graphics", "image cells"])) return "benchmark-multimodal-tables";
+  if (hasAny(t, ["wild", "real-world", "realistic", "photographed", "robust", "tablevista", "realhitbench"])) return "benchmark-real-world-robustness";
+  if ((hasTask(paper, "TSR") || hasTask(paper, "DETECT") || hasTask(paper, "OCR")) && !hasTask(paper, "QA")) return "benchmark-recognition";
+  return "benchmark-understanding-reasoning";
+}
+
+function classifyEvaluation(paper) {
+  const t = text(paper);
+  if (hasTask(paper, "SURVEY")) return "survey";
+  if (hasAny(t, ["grits", "metric", "uncertainty", "evaluating table structure recognition"])) return "metrics";
+  if (hasAny(t, ["texts or images", "text or image", "modality gap", "representation", "cross-domain case study"])) return "representation-analysis";
+  if (hasAny(t, ["reproducibility", "replicability", "aligning benchmark", "generalization", "robustness"])) return "robustness-generalization";
+  return "evaluation-protocols";
+}
+
+function classify(paper) {
+  if (paper.category === "adjacent") return "related";
+  if (paper.category === "data-generation") return classifyGeneration(paper);
+  if (paper.category === "benchmarks-datasets") return classifyBenchmark(paper);
+  if (paper.category === "recognition-extraction") return classifyRecognition(paper);
+  if (paper.category === "analysis-evaluation") return classifyEvaluation(paper);
+  if (paper.category === "multimodal-reasoning") return classifyReasoning(paper);
+  throw new Error(`Cannot classify paper ${paper.id}: unknown category ${paper.category}`);
+}
+
+const childToParent = new Map();
+for (const section of taxonomy) for (const [child] of section.children) childToParent.set(child, section.id);
+
+const assignments = new Map();
+for (const paper of papers) {
+  const child = classify(paper);
+  if (child !== "related" && !childToParent.has(child)) throw new Error(`Unknown taxonomy child ${child} for ${paper.id}`);
+  if (assignments.has(paper.id)) throw new Error(`Paper classified twice: ${paper.id}`);
+  assignments.set(paper.id, child);
+}
+if (assignments.size !== papers.length) throw new Error(`Classification coverage mismatch: ${assignments.size}/${papers.length}`);
+
+const corePapers = papers.filter((paper) => assignments.get(paper.id) !== "related");
+const relatedPapers = papers.filter((paper) => assignments.get(paper.id) === "related");
+if (corePapers.length + relatedPapers.length !== papers.length) throw new Error("Paper coverage mismatch");
+
+const codeCount = papers.filter((paper) => paper.code).length;
+const dataCount = papers.filter((paper) => paper.data).length;
 const countsByYear = [...new Set(papers.map((paper) => paper.year))]
   .sort((a, b) => b - a)
   .map((year) => `${year}: **${papers.filter((paper) => paper.year === year).length}**`)
   .join(" · ");
 
-const coreCount = papers.filter((paper) => paper.category !== "adjacent").length;
-const adjacentCount = papers.length - coreCount;
-const codeCount = papers.filter((paper) => paper.code).length;
-const dataCount = papers.filter((paper) => paper.data).length;
+function renderPaperTable(items) {
+  if (!items.length) return "_No papers in this subsection yet._";
+  return `| Year | Paper | Venue | Why it matters | Resources |\n|---:|---|---|---|---|\n${items.sort(byNewest).map(paperRow).join("\n")}`;
+}
 
-const generationResourceRows = generationResources.map((resource) =>
-  `| ${generationStageLabels[resource.stage]} | **${link(esc(resource.name), resource.url)}**<br><sub>${provenanceLabels[resource.provenance]}</sub> | ${esc(resource.output)} | ${esc(resource.bestFor)} |`
-).join("\n");
+function renderTaxonomySection(section) {
+  const childBlocks = section.children.map(([childId, childTitle]) => {
+    const items = corePapers.filter((paper) => assignments.get(paper.id) === childId);
+    return `<a id="${childId}"></a>\n### ${childTitle}\n\n${renderPaperTable(items)}`;
+  });
 
-const paperLink = (id, label) => {
-  const paper = papers.find((item) => item.id === id);
-  if (!paper) throw new Error(`Unknown paper id in editorial section: ${id}`);
-  return link(label ?? paper.title.split(":")[0], paper.paper);
-};
+  if (section.id === "multimodal-table-data-generation") {
+    const resourceBlocks = section.children.map(([childId, childTitle]) => {
+      const resources = generationResources.filter((resource) => generationStageToChild[resource.stage] === childId);
+      if (!resources.length) return "";
+      const rows = resources.map((resource) => `| **${link(esc(resource.name), resource.url)}**<br><sub>${provenanceLabels[resource.provenance]}</sub> | ${esc(resource.output)} | ${esc(resource.bestFor)} |`).join("\n");
+      return `#### ${childTitle} — Practical generators & toolkits\n\n| Project | Produces | Best used for |\n|---|---|---|\n${rows}`;
+    }).filter(Boolean);
+    childBlocks.push(`<a id="generation-tools"></a>\n### Practical Generators & Toolkits\n\nProjects are grouped under the same production stages as the papers above, so the literature and runnable resources stay in one place.\n\n${resourceBlocks.join("\n\n")}`);
+  }
 
-const categorySummary = categoryOrder.map((key) => {
-  const category = categories[key];
-  return `| ${category.icon} [${category.title}](#${key}) | ${papers.filter((paper) => paper.category === key).length} | ${category.description} |`;
-}).join("\n");
+  const count = corePapers.filter((paper) => childToParent.get(assignments.get(paper.id)) === section.id).length;
+  return `<a id="${section.id}"></a>\n## ${section.icon} ${section.title}\n\n> ${section.description} **${count} papers.**\n\n${childBlocks.join("\n\n")}\n\n<p align="right"><a href="#readme-top">⬆️ Back to top</a></p>`;
+}
 
-const toc = categoryOrder.map((key) => {
-  const category = categories[key];
-  return `  - [${category.icon} ${category.title}](#${key})`;
-}).join("\n");
-
-const sections = categoryOrder.map((key) => {
-  const category = categories[key];
-  const categoryPapers = papers.filter((paper) => paper.category === key).sort(byNewest);
-  const rows = categoryPapers.map(paperRow).join("\n");
-  return `<a id="${key}"></a>\n## ${category.icon} ${category.title}\n\n> ${category.description} **${categoryPapers.length} papers.**\n\n| Year | Paper | Venue | Input / task tags | Why it matters | Resources |\n|---:|---|---|---|---|---|\n${rows}\n\n<p align="right"><a href="#readme-top">⬆️ Back to top</a></p>`;
-}).join("\n\n");
-
-const frontierIds = [
-  "tablenet-autonomous",
-  "tabverse",
-  "mmtablebench",
-  "photographed-table-reasoning",
-  "tablevista",
-  "wildtablebench",
-  "mm-table-r1"
-];
-
-const frontierRows = frontierIds.map((id) => {
-  const paper = papers.find((item) => item.id === id);
-  if (!paper) throw new Error(`Unknown frontier paper id: ${id}`);
-  return `| ${paperLink(id)} | ${paper.venue} | ${esc(paper.note)} |`;
+const toc = taxonomy.map((section) => {
+  const children = section.children.map(([id, title]) => `  - [${title}](#${id})`).join("\n");
+  return `- [${section.icon} ${section.title}](#${section.id})\n${children}`;
 }).join("\n");
 
 const readme = `<a id="readme-top"></a>
@@ -148,162 +243,44 @@ const readme = `<a id="readme-top"></a>
 <div align="center">
   <img src="assets/logo.svg" width="116" alt="Awesome Multimodal Table Understanding logo" />
   <h1>Awesome Multimodal Table Understanding</h1>
-  <p><strong>A living, modality-aware map of research on understanding tables as visual objects.</strong></p>
-  <p>Table images · document pages · multimodal cells · visual reasoning · structure recognition · synthetic training data</p>
+  <p><strong>A curated research map for understanding tables as visual and multimodal objects.</strong></p>
+  <p>Table perception · structure recognition · multimodal reasoning · complex tables · synthetic training data</p>
   <p>
     <a href="https://awesome.re"><img src="https://awesome.re/badge-flat2.svg" alt="Awesome" /></a>
     <img src="https://img.shields.io/badge/papers-${papers.length}-2F81F7?style=flat-square" alt="${papers.length} papers" />
-    <img src="https://img.shields.io/badge/core-${coreCount}-6E56CF?style=flat-square" alt="${coreCount} core papers" />
     <img src="https://img.shields.io/badge/code-${codeCount}-12B886?style=flat-square" alt="${codeCount} code links" />
     <img src="https://img.shields.io/badge/data-${dataCount}-D6336C?style=flat-square" alt="${dataCount} data links" />
     <img src="https://img.shields.io/badge/generators-${generationResources.length}-E8590C?style=flat-square" alt="${generationResources.length} generation projects" />
-    <img src="https://img.shields.io/badge/edition-Data%20Factory-7950F2?style=flat-square" alt="Data Factory edition" />
     <img src="https://img.shields.io/badge/coverage-2022%E2%80%932026-F59F00?style=flat-square" alt="Coverage 2022 to 2026" />
     <a href="https://github.com/lyc61c/Awesome-Multimodal-Table-Understanding/actions/workflows/validate.yml"><img src="https://github.com/lyc61c/Awesome-Multimodal-Table-Understanding/actions/workflows/validate.yml/badge.svg" alt="Validate" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC0--1.0-lightgrey?style=flat-square" alt="CC0 1.0" /></a>
   </p>
-  <p>
-    <a href="#start-here">🚀 Start here</a> ·
-    <a href="#research-map">🧭 Research map</a> ·
-    <a href="#data-generation-pipeline">🏭 Data factory</a> ·
-    <a href="#paper-collection">📚 Browse papers</a> ·
-    <a href="CONTRIBUTING.md">🤝 Contribute</a>
-  </p>
+  <p><a href="#papers">📚 Papers</a> · <a href="RELATED.md">🔗 Related Work</a> · <a href="CONTRIBUTING.md">🤝 Contribute</a></p>
 </div>
 
-> **Coverage snapshot — ${lastUpdated}.** The collection contains **${papers.length} papers**: **${coreCount} core** and **${adjacentCount} adjacent**, with ${codeCount} code links and ${dataCount} data links. ${countsByYear}.
+> **Updated ${lastUpdated}.** ${papers.length} papers · ${corePapers.length} core · ${relatedPapers.length} related · ${generationResources.length} practical generation projects. ${countsByYear}.
 
-> 🆕 **Data Factory Edition.** This is the expanded README, with **${papers.filter((paper) => paper.category === "data-generation").length} data-generation papers**, **${generationResources.length} runnable projects**, and an end-to-end map covering structured-content synthesis, HTML/Markdown/LaTeX rendering, direct image generation, instruction/QA creation, augmentation, and automatic validation. Jump to the [multimodal table data factory](#data-generation-pipeline).
+<a id="papers"></a>
+## 📚 Papers
 
-<a id="start-here"></a>
-## 🚀 Start here
-
-New to the field? Pick the path closest to your goal instead of scrolling through ${papers.length} rows.
-
-| I want to… | Recommended path |
-|---|---|
-| Build a visual-table reasoning model | ${paperLink("mmtu")} → ${paperLink("tabpedia")} → ${paperLink("syntab-llava")} → ${paperLink("coretab")} |
-| Evaluate realistic visual robustness | ${paperLink("tablevista")} · ${paperLink("wildtablebench")} · ${paperLink("photographed-table-reasoning", "PCTR-16K")} · ${paperLink("tabverse")} |
-| Reconstruct table structure and content | ${paperLink("pubtables1m")} → ${paperLink("tablevlm")} → ${paperLink("unitable")} → ${paperLink("trivia")} |
-| Produce multimodal table training data | ${paperLink("map-make", "Map&Make")} → ${paperLink("tablenet-autonomous", "TableNet")} → ${paperLink("cosyn", "CoSyn")} → ${paperLink("syntab-llava", "SynTab-LLaVA")} |
-| Study RL and process supervision | ${paperLink("table-r1-multimodal-grpo", "Table-R1")} · ${paperLink("mm-table-r1", "MM-Table-R1")} · ${paperLink("coretab")} · ${paperLink("v-tabler1")} |
-| Work with images inside table cells | ${paperLink("knowledge-aware-multimodal-tables", "MMTabQA")} · ${paperLink("tabledart")} · ${paperLink("mmtabreal")} |
-| Compare images with text/markup | ${paperLink("tables-texts-or-images")} · ${paperLink("texts-or-images-analysis")} · ${paperLink("tableeval-cross-domain", "Cross-domain TableEval")} · ${paperLink("tabverse")} |
-
-### ✨ 2026 frontier watch
-
-| Paper | Venue | Signal |
-|---|---|---|
-${frontierRows}
-
-<a id="research-map"></a>
-## 🧭 Research map
-
-| Layer | Central question | Representative starting points |
-|---|---|---|
-| 🔎 Detection and recognition | Where is the table, and what are its cells, topology, text, and geometry? | ${paperLink("pubtables1m")}, ${paperLink("tablevlm")}, ${paperLink("unitable")}, ${paperLink("trivia")} |
-| 🧠 Visual reasoning | Can a model answer, verify, calculate, and explain directly from table pixels? | ${paperLink("mmtu")}, ${paperLink("tabpedia")}, ${paperLink("syntab-llava")}, ${paperLink("coretab")} |
-| 🏭 Data production | How can we generate content, layouts, pixels, labels, and reasoning traces with verifiable provenance? | ${paperLink("cosyn")}, ${paperLink("tablenet-autonomous")}, ${paperLink("mugat")}, ${paperLink("tabledreamer")} |
-| 🌍 Realism and robustness | Do gains survive original styles, dense layouts, perturbations, and real-world captures? | ${paperLink("tablevqa-bench")}, ${paperLink("tablet-dataset")}, ${paperLink("tablevista")}, ${paperLink("wildtablebench")} |
-| 🧩 Hybrid and interleaved tables | How should models combine pixels, markup, and graphics embedded in table cells? | ${paperLink("knowledge-aware-multimodal-tables")}, ${paperLink("tabledart")}, ${paperLink("mmtabreal")} |
-| 🎯 Retrieval and attribution | Can a system find the right table and point to the exact supporting cells? | ${paperLink("tabrag")}, ${paperLink("ritt")}, ${paperLink("vitab-a")} |
-
-<a id="data-generation-pipeline"></a>
-## 🏭 Multimodal table data factory
-
-Use this map to turn structured values, text, or a layout plan into pixel-grounded training samples. The strongest pipelines keep every intermediate artifact—schema, markup, render parameters, cell boxes, answers, and validation traces—so labels remain auditable.
-
-\`\`\`mermaid
-flowchart LR
-  A["1. Content & schema"] --> B["2. Markup & layout"] --> C["3. Render pixels"] --> D["4. QA & instructions"] --> E["5. Validate & augment"]
-\`\`\`
-
-| Production stage | Representative papers | Typical output |
-|---|---|---|
-| 🧬 Content and structure | ${paperLink("map-make", "Map&Make")}, ${paperLink("tabledreamer", "TableDreamer")}, ${paperLink("great-tabular-generator", "GReaT")}, ${paperLink("tabsyn", "TabSyn")} | Values, schemas, relational dependencies, and table semantics |
-| 🎨 Markup-to-pixel rendering | ${paperLink("tablenet-autonomous", "TableNet")}, ${paperLink("mugat", "μgat")}, ${paperLink("flexdoc", "FlexDoc")} | HTML/Markdown/LaTeX, images or pages, boxes, and structure labels |
-| 🖼️ Direct image synthesis | ${paperLink("latent-diffusion-table-generation", "Latent Diffusion")}, ${paperLink("diffusion-document-generation", "Document Diffusion")}, ${paperLink("synthesizing-realistic-table-data", "Realistic Table Synthesis")} | Table-bearing pixels generated or composed under layout control |
-| 💬 QA and instruction synthesis | ${paperLink("cosyn", "CoSyn")}, ${paperLink("syntab-llava", "SynTab-LLaVA")}, ${paperLink("tabularmath-autot2t", "AutoT2T")} | Questions, answers, reasoning traces, and multimodal conversations |
-| 🛡️ Validation and stress testing | ${paperLink("graft", "GRAFT")}, ${paperLink("why-llms-bad-synthetic-tables", "Permutation-aided FT")}, ${paperLink("tablevqa-bench", "TableVQA-Bench")} | Executable checks, controlled perturbations, and visual robustness tests |
-
-### 🧰 Practical generators and toolkits
-
-These repositories can serve as components of a training-data production stack. “Official” means the repository is linked to the corresponding paper; community projects are clearly labeled.
-
-| Stage | Project | Produces | Best used for |
-|---|---|---|---|
-${generationResourceRows}
-
-> **Recommended recipe:** generate statistically coherent values → plan spans and headers → render several HTML/Markdown/LaTeX style families → retain cell-level provenance → synthesize executable QA → add scan, camera, compression, and typography perturbations → reject samples whose rendered evidence no longer supports the answer.
-
-### Collection at a glance
-
-| Section | Papers | What belongs here |
-|---|---:|---|
-${categorySummary}
-
-<details>
-<summary><strong>🎯 Scope and editorial policy</strong></summary>
-
-### Included in the core list
-
-- A model consumes pixels containing a table, document page, or screenshot and performs recognition, extraction, QA, reasoning, retrieval, or generation.
-- A benchmark evaluates visual-table perception or reasoning.
-- A dataset, metric, survey, or diagnostic is directly useful for visual or multimodal table understanding.
-- A generation method produces table content, markup, pixels, labels, or instructions that can directly seed multimodal table training.
-
-### Kept outside the core list
-
-Text-only table reasoning, spreadsheet agents without visual input, generic document AI without substantive table evaluation, and chart-only work. Structured table synthesis is included only when it is a practical upstream source for rendering multimodal training data. Borderline but useful work is retained in **Adjacent multimodal and document-table work**.
-
-“Comprehensive” is treated as an auditable process, not a finished claim: every entry has a stable paper link, explicit modality tags, a concise relevance note, and automated duplicate/schema checks.
-
-</details>
-
-<a id="tag-legend"></a>
-## 🏷️ Tag legend
-
-### Input modality
-
-| Tag | Meaning |
-|---|---|
-${Object.entries(inputLabels).map(([tag, meaning]) => `| ${codeTag(tag)} | ${meaning} |`).join("\n")}
-
-### Task
-
-${["SYNTH", "RENDER", "AUGMENT", "QA", "REASON", "TSR", "OCR", "EXTRACT", "RETRIEVE", "CAPTION", "EVAL", "DATA", "RL"].map(codeTag).join(" ")}
-
-<a id="paper-collection"></a>
-## 📚 Paper collection
-
-- [🚀 Start here](#start-here)
-- [🧭 Research map](#research-map)
-- [🏭 Multimodal table data factory](#data-generation-pipeline)
-- [🏷️ Tag legend](#tag-legend)
 ${toc}
-- [🔗 Related lists](#related-lists)
-- [🤝 Contributing](#contributing)
 
-${sections}
+${taxonomy.map(renderTaxonomySection).join("\n\n")}
 
-<a id="related-lists"></a>
-## 🔗 Related lists
+## 🔗 Related Work
 
-- [Awesome-Tabular-LLMs](https://github.com/SpursGoZmy/Awesome-Tabular-LLMs) — broad table + LLM coverage and the structural inspiration for this repository.
-- [Awesome-LLM-Table-Mining](https://github.com/USTCAGI/Awesome-LLM-Table-Mining) — table mining with language models.
-- [Curated Table Structure Recognition](https://github.com/qyhou/curated-table-structure-recognition) — a focused and frequently updated TSR bibliography.
-- [Awesome Table Structure Recognition](https://github.com/Tan-Junwen/awesome-table-structure-recognition) — TSR papers, datasets, and implementations.
+General document AI, text-only table reasoning, heterogeneous multimodal QA, and other useful adjacent work are kept in **[RELATED.md](RELATED.md)** so the main bibliography stays focused.
 
 <a id="contributing"></a>
 ## 🤝 Contributing
 
 Found a missing paper, better official link, released code, or venue update? Please read [CONTRIBUTING.md](CONTRIBUTING.md) and open a pull request or use the paper-suggestion issue form.
 
-The sources of truth are [data/papers.json](data/papers.json) and [data/generation-resources.json](data/generation-resources.json); README tables are generated automatically. This keeps a large bibliography reviewable and prevents hand-edited tables from drifting.
+The sources of truth are [data/papers.json](data/papers.json) and [data/generation-resources.json](data/generation-resources.json). README and RELATED.md are generated automatically, and the build fails if any paper is left unclassified or classified more than once.
 
 ## 🙏 Acknowledgements
 
-The information architecture draws on the clarity of [Awesome](https://github.com/sindresorhus/awesome), [Awesome Python](https://github.com/vinta/awesome-python), and the navigation patterns collected in [Awesome README](https://github.com/matiassingers/awesome-readme). Thanks to the maintainers of the related table-paper lists and to every author who releases code or data.
+The information architecture draws on the clarity of [Awesome](https://github.com/sindresorhus/awesome), [Awesome Python](https://github.com/vinta/awesome-python), and the navigation patterns collected in [Awesome README](https://github.com/matiassingers/awesome-readme). Thanks to the maintainers of related table-paper lists and to authors who release code or data.
 
 ## 📜 License
 
@@ -315,13 +292,41 @@ Released under [CC0 1.0](LICENSE). Paper abstracts, figures, datasets, and code 
 </div>
 `;
 
-const readmeUrl = new URL("../README.md", import.meta.url);
+const relatedRows = relatedPapers.sort(byNewest).map(paperRow).join("\n");
+const related = `# Related Work
+
+This page keeps useful adjacent literature outside the core visual-table taxonomy. These papers are preserved rather than removed, but they are not counted as core multimodal table papers.
+
+| Year | Paper | Venue | Why it matters | Resources |
+|---:|---|---|---|---|
+${relatedRows}
+
+## Related Lists
+
+- [Awesome-Tabular-LLMs](https://github.com/SpursGoZmy/Awesome-Tabular-LLMs) — broad table + LLM coverage.
+- [Awesome-LLM-Table-Mining](https://github.com/USTCAGI/Awesome-LLM-Table-Mining) — table mining with language models.
+- [Curated Table Structure Recognition](https://github.com/qyhou/curated-table-structure-recognition) — focused TSR bibliography.
+- [Awesome Table Structure Recognition](https://github.com/Tan-Junwen/awesome-table-structure-recognition) — TSR papers, datasets, and implementations.
+
+[← Back to README](README.md)
+`;
+
+const outputs = [
+  [new URL("../README.md", import.meta.url), readme, "README.md"],
+  [new URL("../RELATED.md", import.meta.url), related, "RELATED.md"]
+];
+
 if (checkOnly) {
-  const current = await readFile(readmeUrl, "utf8").catch(() => "");
-  if (current !== readme) {
-    console.error("README.md is out of date. Run: npm run build");
-    process.exit(1);
+  let stale = false;
+  for (const [url, expected, name] of outputs) {
+    const current = await readFile(url, "utf8").catch(() => "");
+    if (current !== expected) {
+      console.error(`${name} is out of date. Run: npm run build`);
+      stale = true;
+    }
   }
+  if (stale) process.exit(1);
 } else {
-  await writeFile(readmeUrl, readme);
+  for (const [url, content] of outputs) await writeFile(url, content);
+  console.log(`Generated README.md and RELATED.md with ${corePapers.length} core papers and ${relatedPapers.length} related papers; every paper classified exactly once.`);
 }
