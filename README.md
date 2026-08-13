@@ -7,18 +7,17 @@
   <p>Table perception · structure recognition · multimodal reasoning · complex tables · synthetic training data</p>
   <p>
     <a href="https://awesome.re"><img src="https://awesome.re/badge-flat2.svg" alt="Awesome" /></a>
-    <img src="https://img.shields.io/badge/papers-170-2F81F7?style=flat-square" alt="170 papers" />
+    <img src="https://img.shields.io/badge/papers-175-2F81F7?style=flat-square" alt="175 papers" />
     <img src="https://img.shields.io/badge/code-40-12B886?style=flat-square" alt="40 code links" />
     <img src="https://img.shields.io/badge/data-8-D6336C?style=flat-square" alt="8 data links" />
     <img src="https://img.shields.io/badge/generators-18-E8590C?style=flat-square" alt="18 generation projects" />
     <img src="https://img.shields.io/badge/coverage-2022%E2%80%932026-F59F00?style=flat-square" alt="Coverage 2022 to 2026" />
     <a href="https://github.com/lyc61c/Awesome-Multimodal-Table-Understanding/actions/workflows/validate.yml"><img src="https://github.com/lyc61c/Awesome-Multimodal-Table-Understanding/actions/workflows/validate.yml/badge.svg" alt="Validate" /></a>
-    <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC0--1.0-lightgrey?style=flat-square" alt="CC0 1.0" /></a>
   </p>
-  <p><a href="#papers">📚 Papers</a> · <a href="RELATED.md">🔗 Related Work</a> · <a href="CONTRIBUTING.md">🤝 Contribute</a></p>
+  <p><a href="#papers">📚 Papers</a> · <a href="#related-work">🔗 Related Work</a></p>
 </div>
 
-> **Updated 2026-08-13.** 170 papers · 153 core · 17 related · 18 practical generation projects. 2026: **28** · 2025: **49** · 2024: **42** · 2023: **33** · 2022: **18**.
+> **Updated 2026-08-13.** 175 papers · 18 practical generation projects.
 
 <a id="papers"></a>
 ## 📚 Papers
@@ -34,31 +33,27 @@
   - [Hybrid Visual–Textual Reasoning](#hybrid-visual-textual-reasoning)
   - [Retrieval & RAG](#retrieval-rag)
   - [Grounding & Attribution](#grounding-attribution)
-- [🧩 3. Multimodal & Complex Tables](#multimodal-complex-tables)
   - [Image / Graphic Cells](#image-graphic-cells)
-  - [Scientific Tables](#scientific-tables)
-  - [Hierarchical Tables](#hierarchical-tables)
-  - [Multi-table Reasoning](#multi-table-reasoning)
-  - [Real-world / Photographed Tables](#real-world-photographed-tables)
-- [🏭 4. Multimodal Table Data Generation](#multimodal-table-data-generation)
+- [🏭 3. Multimodal Table Data Generation](#multimodal-table-data-generation)
   - [Structured Content Generation](#structured-content-generation)
   - [Schema & Layout Generation](#schema-layout-generation)
   - [Markup-to-Image Rendering](#markup-to-image-rendering)
   - [Direct Image Generation](#direct-image-generation)
   - [QA / Instruction Generation](#qa-instruction-generation)
   - [Augmentation & Validation](#augmentation-validation)
-- [🧪 5. Benchmarks & Datasets](#benchmarks-datasets)
+- [🧪 4. Benchmarks & Datasets](#benchmarks-datasets)
   - [Recognition](#benchmark-recognition)
   - [Understanding & Reasoning](#benchmark-understanding-reasoning)
   - [Real-world / Robustness](#benchmark-real-world-robustness)
   - [Multimodal Tables](#benchmark-multimodal-tables)
-- [📏 6. Evaluation & Analysis](#evaluation-analysis)
+- [📏 5. Evaluation & Analysis](#evaluation-analysis)
   - [Metrics](#metrics)
   - [Evaluation Protocols](#evaluation-protocols)
   - [Representation Analysis](#representation-analysis)
   - [Robustness / Generalization](#robustness-generalization)
-- [📖 7. Surveys](#surveys)
+- [📖 6. Surveys](#surveys)
   - [Surveys](#survey)
+- [🔗 Related Work](#related-work)
 
 <a id="visual-table-perception-recognition"></a>
 ## 🔎 1. Visual Table Perception & Recognition
@@ -166,7 +161,7 @@
 <a id="multimodal-table-understanding-reasoning"></a>
 ## 🧠 2. Multimodal Table Understanding & Reasoning
 
-> Methods that answer questions, calculate, reason, retrieve evidence, or align visual tables with structured representations. **19 papers.**
+> Visual and multimodal methods for answering, calculating, retrieving, grounding, and reasoning over standard and complex tables. **21 papers.**
 
 <a id="table-question-answering"></a>
 ### Table Question Answering
@@ -217,13 +212,6 @@
 |---:|---|---|---|---|
 | 2026 | **[Decoupling Skeleton and Flesh: Efficient Multimodal Table Reasoning with Disentangled Alignment and Structure-aware Guidance](https://arxiv.org/abs/2602.03491)** | arXiv | Separates structural abstraction from semantic grounding and adds structure-aware inference guidance. | — |
 
-<p align="right"><a href="#readme-top">⬆️ Back to top</a></p>
-
-<a id="multimodal-complex-tables"></a>
-## 🧩 3. Multimodal & Complex Tables
-
-> Methods centered on non-standard table settings where multimodal cells, domain structure, hierarchy, multiple tables, or real-world capture are the main challenge. **2 papers.**
-
 <a id="image-graphic-cells"></a>
 ### Image / Graphic Cells
 
@@ -232,30 +220,10 @@
 | 2024 | **[Knowledge-Aware Reasoning over Multimodal Semi-Structured Tables](https://aclanthology.org/2024.findings-emnlp.822/)** | Findings of EMNLP | Introduces MMTABQA, where semi-structured tables interleave text cells with image cells. | — |
 | 2023 | **[M-TBQA: Multimodal Table-Based Question Answering](https://doi.org/10.1145/3650215.3650255)** | ICMLCA | An early task and model for question answering over tables whose cells include both text and images. | — |
 
-<a id="scientific-tables"></a>
-### Scientific Tables
-
-_No papers in this subsection yet._
-
-<a id="hierarchical-tables"></a>
-### Hierarchical Tables
-
-_No papers in this subsection yet._
-
-<a id="multi-table-reasoning"></a>
-### Multi-table Reasoning
-
-_No papers in this subsection yet._
-
-<a id="real-world-photographed-tables"></a>
-### Real-world / Photographed Tables
-
-_No papers in this subsection yet._
-
 <p align="right"><a href="#readme-top">⬆️ Back to top</a></p>
 
 <a id="multimodal-table-data-generation"></a>
-## 🏭 4. Multimodal Table Data Generation
+## 🏭 3. Multimodal Table Data Generation
 
 > Pipelines and tools for creating table contents, schemas, rendered pixels, instructions, and validated synthetic training data. **21 papers.**
 
@@ -367,7 +335,7 @@ Projects are grouped under the same production stages as the papers above, so th
 <p align="right"><a href="#readme-top">⬆️ Back to top</a></p>
 
 <a id="benchmarks-datasets"></a>
-## 🧪 5. Benchmarks & Datasets
+## 🧪 4. Benchmarks & Datasets
 
 > Datasets and benchmark suites for recognition, understanding, robustness, and multimodal table settings. **26 papers.**
 
@@ -424,7 +392,7 @@ Projects are grouped under the same production stages as the papers above, so th
 <p align="right"><a href="#readme-top">⬆️ Back to top</a></p>
 
 <a id="evaluation-analysis"></a>
-## 📏 6. Evaluation & Analysis
+## 📏 5. Evaluation & Analysis
 
 > Metrics, controlled evaluations, representation studies, and analyses of robustness and generalization. **11 papers.**
 
@@ -466,40 +434,55 @@ Projects are grouped under the same production stages as the papers above, so th
 <p align="right"><a href="#readme-top">⬆️ Back to top</a></p>
 
 <a id="surveys"></a>
-## 📖 7. Surveys
+## 📖 6. Surveys
 
-> Surveys and reviews of table detection, recognition, extraction, and multimodal table understanding. **2 papers.**
+> Surveys of table recognition, table pre-training, table reasoning, TableQA, and LLM/VLM-based table processing. **7 papers.**
 
 <a id="survey"></a>
 ### Surveys
 
 | Year | Paper | Venue | Why it matters | Resources |
 |---:|---|---|---|---|
+| 2025 | **[Large Language Model for Table Processing: A Survey](https://doi.org/10.1007/s11704-024-40763-6)** | Frontiers of Computer Science | Surveys LLM- and VLM-based table processing across question answering, image-table extraction, spreadsheet manipulation, training, prompting, and agents. | — |
+| 2025 | **[Table Question Answering in the Era of Large Language Models: A Comprehensive Survey of Tasks, Methods, and Evaluation](https://arxiv.org/abs/2510.09671)** | arXiv | Reviews TableQA task formulations, benchmarks, reasoning challenges, LLM methods, evaluation practices, and emerging reinforcement-learning directions. | — |
+| 2025 | **[Tabular Data Understanding with LLMs: A Survey of Recent Advances and Challenges](https://arxiv.org/abs/2508.00217)** | arXiv | Organizes tabular representations and understanding tasks while highlighting complex structures, multimodal inputs, long tables, and multi-table reasoning. | — |
 | 2024 | **[A Review on Table Recognition Based on Deep Learning](https://arxiv.org/abs/2312.04808)** | arXiv | Reviews end-to-end and modular approaches across table detection, structure, and content recognition. | — |
+| 2024 | **[A Survey of Table Reasoning with Large Language Models](https://arxiv.org/abs/2402.08259)** | arXiv | Surveys LLM-era table reasoning techniques, analyzes why LLMs improve tabular reasoning, and outlines methodological and application-oriented research directions. | — |
 | 2024 | **[Deep Learning for Table Detection and Structure Recognition: A Survey](https://arxiv.org/abs/2211.08469)** | ACM Computing Surveys | Surveys datasets, architectures, and evaluation practices for table detection and structure recognition. | [💻 Code](https://github.com/abdoelsayed2016/Table-Detection-Structure-Recognition) |
+| 2022 | **[Table Pre-training: A Survey on Model Architectures, Pre-training Objectives, and Downstream Tasks](https://www.ijcai.org/proceedings/2022/761)** | IJCAI Survey Track | Reviews table pre-training architectures, objectives, and downstream tasks including question answering, table search, relation classification, and formula prediction. | — |
 
 <p align="right"><a href="#readme-top">⬆️ Back to top</a></p>
 
+<a id="related-work"></a>
 ## 🔗 Related Work
 
-General document AI, text-only table reasoning, heterogeneous multimodal QA, and other useful adjacent work are kept in **[RELATED.md](RELATED.md)** so the main bibliography stays focused.
+Useful adjacent literature is kept directly in the main README for completeness while remaining visually separated from the core taxonomy. **17 papers.**
 
-<a id="contributing"></a>
-## 🤝 Contributing
+| Year | Paper | Venue | Why it matters | Resources |
+|---:|---|---|---|---|
+| 2025 | **[OmniParser V2: Structured-Points-of-Thought for Unified Visual Text Parsing and Its Generality to Multimodal Large Language Models](https://arxiv.org/abs/2502.16161)** | arXiv | Uses structured points-of-thought to unify visual text parsing and transfer document structure skills to MLLMs. | — |
+| 2025 | **[Structure- and Semantic-Based Rationale Distillation: Table and Chart Question Answering in Scientific Documents](https://doi.org/10.1145/3769002.3769953)** | RACS | Distills structural and semantic rationales into a compact model for scientific table and chart QA. | — |
+| 2025 | **[Table-R1: Region-based Reinforcement Learning for Table Understanding](https://arxiv.org/abs/2505.12415)** | arXiv | Injects relevant table regions into reasoning and optimizes region and answer rewards; input tables are serialized rather than visual. | — |
+| 2025 | **[TASER: Table Agents for Schema-guided Extraction and Retrieval](https://arxiv.org/abs/2508.13404)** | arXiv | Uses agents to extract fragmented document tables into a target schema and retrieve evidence. | — |
+| 2025 | **[Visual Editing as a Chain of Thought for Structured Image Understanding](https://arxiv.org/abs/2505.19455)** | ICML | REFOCUS iteratively edits structured images to expose relevant evidence, including tables and charts. | — |
+| 2025 | **[WikiMixQA: A Multimodal Benchmark for Question Answering over Tables and Charts](https://aclanthology.org/2025.findings-acl.1280/)** | Findings of ACL | Requires multi-hop reasoning over tables and charts distributed across long Wikipedia pages. | — |
+| 2024 | **[Extracting Information from Scientific Literature via Visual Table Question Answering Models](https://doi.org/10.1145/3649601.3698752)** | RACS | Compares OCR, visual QA, and structure-preserving pipelines for extracting evidence from scientific tables. | — |
+| 2024 | **[Leopard: A Vision Language Model for Text-Rich Multi-Image Tasks](https://arxiv.org/abs/2410.01744)** | arXiv | Handles multiple high-resolution text-rich images, with dedicated multi-table and multi-chart evaluation. | — |
+| 2024 | **[mPLUG-DocOwl 1.5: Unified Structure Learning for OCR-free Document Understanding](https://aclanthology.org/2024.findings-emnlp.175/)** | Findings of EMNLP | A general document VLM with structure-aware pretraining and substantive table recognition and QA evaluation. | — |
+| 2024 | **[Multimodal ArXiv: A Dataset for Improving Scientific Comprehension of Large Vision-Language Models](https://aclanthology.org/2024.acl-long.775/)** | ACL | Pairs scientific text with figures, tables, and equations for broad document comprehension. | — |
+| 2024 | **[Tabular Insights, Visual Impacts: Transferring Expertise from Tables to Images](https://proceedings.mlr.press/v235/jiang24h.html)** | ICML | Transfers representations learned from tabular features to ordinary image tasks; related multimodal tabular learning, not visual-table reading. | — |
+| 2023 | **[ICDAR 2023 Competition on Visual Question Answering on Business Document Images](https://arxiv.org/abs/2303.14935)** | ICDAR | A document-image QA benchmark whose pages frequently require reading tables, forms, and receipts. | — |
+| 2023 | **[Pix2Struct: Screenshot Parsing as Pretraining for Visual Language Understanding](https://proceedings.mlr.press/v202/lee23g.html)** | ICML | Pretrains on screenshot-to-HTML parsing and transfers to visually situated language tasks that include tables. | — |
+| 2023 | **[UniMMQA: Unifying Multi-Modal Question Answering with Structured Knowledge](https://aclanthology.org/2023.findings-emnlp.626/)** | Findings of EMNLP | Unifies QA over text, tables, and ordinary images represented as heterogeneous knowledge sources. | — |
+| 2022 | **[MMCoQA: Conversational Question Answering over Text, Tables, and Images](https://aclanthology.org/2022.acl-long.290/)** | ACL | Retrieves and answers conversational questions from heterogeneous text, serialized tables, and ordinary images. | — |
+| 2022 | **[OCR-Free Document Understanding Transformer](https://www.ecva.net/papers/eccv_2022/papers_ECCV/html/764_ECCV_2022_paper.php)** | ECCV | A foundational OCR-free document model used by later visual table recognition and document QA systems. | [💻 Code](https://github.com/clovaai/donut) |
+| 2022 | **[PP-StructureV2: A Stronger Document Analysis System](https://arxiv.org/abs/2210.05391)** | arXiv | An end-to-end document analysis system whose SLANet component is widely used for table structure recognition. | [💻 Code](https://github.com/PaddlePaddle/PaddleOCR) |
 
-Found a missing paper, better official link, released code, or venue update? Please read [CONTRIBUTING.md](CONTRIBUTING.md) and open a pull request or use the paper-suggestion issue form.
+### Related Lists
 
-The sources of truth are [data/papers.json](data/papers.json) and [data/generation-resources.json](data/generation-resources.json). README and RELATED.md are generated automatically, and the build fails if any paper is left unclassified or classified more than once.
+- [Awesome-Tabular-LLMs](https://github.com/SpursGoZmy/Awesome-Tabular-LLMs) — broad table + LLM coverage.
+- [Awesome-LLM-Table-Mining](https://github.com/USTCAGI/Awesome-LLM-Table-Mining) — table mining with language models.
+- [Curated Table Structure Recognition](https://github.com/qyhou/curated-table-structure-recognition) — focused TSR bibliography.
+- [Awesome Table Structure Recognition](https://github.com/Tan-Junwen/awesome-table-structure-recognition) — TSR papers, datasets, and implementations.
 
-## 🙏 Acknowledgements
-
-The information architecture draws on the clarity of [Awesome](https://github.com/sindresorhus/awesome), [Awesome Python](https://github.com/vinta/awesome-python), and the navigation patterns collected in [Awesome README](https://github.com/matiassingers/awesome-readme). Thanks to the maintainers of related table-paper lists and to authors who release code or data.
-
-## 📜 License
-
-Released under [CC0 1.0](LICENSE). Paper abstracts, figures, datasets, and code remain under their original licenses.
-
-<div align="center">
-  <p><strong>If this map saves you time, consider starring it and contributing the paper we missed.</strong></p>
-  <a href="#readme-top">⬆️ Back to top</a>
-</div>
+<div align="center"><a href="#readme-top">⬆️ Back to top</a></div>
