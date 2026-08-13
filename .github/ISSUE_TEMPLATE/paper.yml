@@ -1,0 +1,42 @@
+name: Suggest a paper
+description: Propose a missing visual or multimodal table paper.
+title: "[Paper] "
+labels: [paper-suggestion]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Paper title
+    validations:
+      required: true
+  - type: input
+    id: canonical_url
+    attributes:
+      label: Canonical paper URL
+      description: Publisher, conference, ACL Anthology, CVF, OpenReview, or arXiv.
+    validations:
+      required: true
+  - type: input
+    id: resources
+    attributes:
+      label: Official code or data URLs
+  - type: dropdown
+    id: visual_input
+    attributes:
+      label: Visual input
+      options:
+        - Table image
+        - Document page
+        - Screenshot or dashboard
+        - Images/graphics embedded in or alongside a table
+        - Synthetic rendering
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: relevance
+    attributes:
+      label: Why it belongs
+      description: State what visual-table task the paper studies.
+    validations:
+      required: true
