@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 
 const papers = JSON.parse(await readFile(new URL("../data/papers.json", import.meta.url), "utf8"));
 const generationResources = JSON.parse(await readFile(new URL("../data/generation-resources.json", import.meta.url), "utf8"));
+const surveys = JSON.parse(await readFile(new URL("../data/surveys.json", import.meta.url), "utf8"));
 const categories = new Set(["multimodal-reasoning", "data-generation", "benchmarks-datasets", "recognition-extraction", "analysis-evaluation", "adjacent"]);
 const inputTags = new Set(["TI", "DP", "SS", "IM", "SR", "TT"]);
 const taskTags = new Set(["SYNTH", "RENDER", "AUGMENT", "QA", "REASON", "TSR", "OCR", "EXTRACT", "RETRIEVE", "CAPTION", "EVAL", "DATA", "RL", "DETECT", "SURVEY", "TRANSFER"]);
@@ -18,13 +19,24 @@ for (const [index, paper] of papers.entries()) {
   else for (const tag of paper.inputs) if (!inputTags.has(tag)) errors.push(`${at}: unknown input tag ${tag}`);
   if (!Array.isArray(paper.tasks) || paper.tasks.length === 0) errors.push(`${at}: tasks must be non-empty`);
   else for (const tag of paper.tasks) if (!taskTags.has(tag)) errors.push(`${at}: unknown task tag ${tag}`);
-  for (const key of ["paper", "code", "data", "project"]) {
-    if (paper[key] && !/^https:\/\//.test(paper[key])) errors.push(`${at}: ${key} must be an https URL`);
-  }
+  for (const key of ["paper", "code", "data", "project"]) if (paper[key] && !/^https:\/\//.test(paper[key])) errors.push(`${at}: ${key} must be an https URL`);
   for (const key of Object.keys(seen)) {
     const value = String(paper[key]).trim().toLowerCase();
     if (seen[key].has(value)) errors.push(`${at}: duplicate ${key} with papers[${seen[key].get(value)}]`);
     else seen[key].set(value, index);
+  }
+}
+
+const surveyRequired = ["id", "year", "title", "venue", "paper", "note"];
+for (const [index, survey] of surveys.entries()) {
+  const at = `surveys[${index}]`;
+  for (const key of surveyRequired) if (!(key in survey) || survey[key] === "") errors.push(`${at}: missing ${key}`);
+  if (!Number.isInteger(survey.year) || survey.year < 2022 || survey.year > 2026) errors.push(`${at}: year must be 2022..2026`);
+  if (!/^https:\/\//.test(survey.paper)) errors.push(`${at}: paper must be an https URL`);
+  for (const key of ["id", "title", "paper"]) {
+    const value = String(survey[key]).trim().toLowerCase();
+    if (seen[key].has(value)) errors.push(`${at}: duplicate ${key} with existing bibliography`);
+    else seen[key].set(value, `survey-${index}`);
   }
 }
 
@@ -51,4 +63,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Validated ${papers.length} papers and ${generationResources.length} generation resources; no schema or duplicate errors.`);
+console.log(`Validated ${papers.length} papers, ${surveys.length} additional surveys, and ${generationResources.length} generation resources; no schema or duplicate errors.`);
