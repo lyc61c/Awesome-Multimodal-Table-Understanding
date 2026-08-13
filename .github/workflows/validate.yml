@@ -17,16 +17,13 @@ jobs:
         with:
           node-version: 22
 
-      - name: Validate pull request output
-        if: github.event_name == 'pull_request'
-        run: npm run check
+      - name: Validate bibliography data
+        run: node scripts/validate.mjs
 
-      - name: Build generated bibliography
-        if: github.event_name == 'push'
+      - name: Build generated README
         run: npm run build
 
-      - name: Validate generated bibliography
-        if: github.event_name == 'push'
+      - name: Check generated README
         run: npm run check
 
       - name: Commit generated README
