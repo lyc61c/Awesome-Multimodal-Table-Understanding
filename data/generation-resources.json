@@ -1,0 +1,164 @@
+[
+  {
+    "id": "wenmuzhou-tablegeneration",
+    "name": "TableGeneration",
+    "url": "https://github.com/WenmuZhou/TableGeneration",
+    "stage": "markup-rendering",
+    "output": "HTML tables, rendered images, and exact TSR labels",
+    "bestFor": "Autonomous schema, layout, and content generation with reproducible supervision",
+    "provenance": "official"
+  },
+  {
+    "id": "allenai-pixmo-docs",
+    "name": "CoSyn / pixmo-docs",
+    "url": "https://github.com/allenai/pixmo-docs",
+    "stage": "instruction-qa",
+    "output": "Python/HTML/LaTeX renders plus QA and reasoning instructions",
+    "bestFor": "Scaling code-guided text-rich multimodal instruction data",
+    "provenance": "official"
+  },
+  {
+    "id": "mugat-generator",
+    "name": "μgat dataset generator",
+    "url": "https://github.com/aimagelab/mugat",
+    "stage": "markup-rendering",
+    "output": "Markdown/LaTeX source paired with PDF and PNG pages",
+    "bestFor": "Academic-style tables with controlled templates and source markup",
+    "provenance": "official"
+  },
+  {
+    "id": "syntab-llava",
+    "name": "SynTab-LLaVA",
+    "url": "https://github.com/bang123-box/SynTab-LLaVA",
+    "stage": "instruction-qa",
+    "output": "Rendered table images and synthesized visual-table QA",
+    "bestFor": "Decoupled, large-scale multimodal table instruction construction",
+    "provenance": "official"
+  },
+  {
+    "id": "tabledreamer",
+    "name": "TableDreamer",
+    "url": "https://github.com/SpursGoZmy/TableDreamer",
+    "stage": "content-structure",
+    "output": "Table titles, contents, instructions, and responses",
+    "bestFor": "Weakness-guided table instruction synthesis with pluggable LLMs",
+    "provenance": "official"
+  },
+  {
+    "id": "autot2t",
+    "name": "AutoT2T",
+    "url": "https://github.com/jokersio-tsy/AutoT2T",
+    "stage": "instruction-qa",
+    "output": "Verified mathematical table tasks and controlled perturbations",
+    "bestFor": "Generating executable numerical reasoning examples",
+    "provenance": "official"
+  },
+  {
+    "id": "map-make",
+    "name": "Map&Make",
+    "url": "https://github.com/coral-lab-asu/map-make",
+    "stage": "content-structure",
+    "output": "Grounded scientific tables from unstructured text",
+    "bestFor": "Text-to-table data with proposition and schema intermediates",
+    "provenance": "official"
+  },
+  {
+    "id": "wikitig",
+    "name": "WikiTIG",
+    "url": "https://github.com/kamigaito/WikiTIG",
+    "stage": "direct-image",
+    "output": "Entity-conditioned table and image generation pairs",
+    "bestFor": "Bootstrapping generation data from Wikipedia infoboxes",
+    "provenance": "official"
+  },
+  {
+    "id": "synth-realistic-table",
+    "name": "Realistic Table Recognition Synthesizer",
+    "url": "https://github.com/iWudao/Synthesizing-Realistic-Data-for-Table-Recognition",
+    "stage": "augmentation-validation",
+    "output": "Realistic financial table images and recognition labels",
+    "bestFor": "Draw-and-paste synthesis that retains complex real structures",
+    "provenance": "official"
+  },
+  {
+    "id": "great-tables",
+    "name": "Great Tables",
+    "url": "https://github.com/posit-dev/great-tables",
+    "stage": "markup-rendering",
+    "output": "Styled HTML tables and exportable table images",
+    "bestFor": "Programmatic DataFrame-to-pixel rendering with rich styling",
+    "provenance": "production"
+  },
+  {
+    "id": "sdv",
+    "name": "Synthetic Data Vault",
+    "url": "https://github.com/sdv-dev/SDV",
+    "stage": "content-structure",
+    "output": "Synthetic single-table, multi-table, and sequential values",
+    "bestFor": "Producing statistically coherent cell contents before rendering",
+    "provenance": "production"
+  },
+  {
+    "id": "be-great",
+    "name": "GReaT",
+    "url": "https://github.com/tabularis-ai/be_great",
+    "stage": "content-structure",
+    "output": "Language-model-generated structured rows",
+    "bestFor": "Domain-adapted table content generation from small seed datasets",
+    "provenance": "official"
+  },
+  {
+    "id": "realtabformer",
+    "name": "REaLTabFormer",
+    "url": "https://github.com/worldbank/REaLTabFormer",
+    "stage": "content-structure",
+    "output": "Synthetic relational and single-table values",
+    "bestFor": "Preserving dependencies across linked tables before visual rendering",
+    "provenance": "official"
+  },
+  {
+    "id": "tabsyn",
+    "name": "TabSyn",
+    "url": "https://github.com/amazon-science/tabsyn",
+    "stage": "content-structure",
+    "output": "Diffusion-generated mixed-type table rows",
+    "bestFor": "High-fidelity numerical and categorical content synthesis",
+    "provenance": "official"
+  },
+  {
+    "id": "sdgx",
+    "name": "SDGX",
+    "url": "https://github.com/hitsz-ids/synthetic-data-generator",
+    "stage": "content-structure",
+    "output": "Pluggable synthetic structured datasets",
+    "bestFor": "Composing privacy, quality, and generator modules in production pipelines",
+    "provenance": "production"
+  },
+  {
+    "id": "doge",
+    "name": "DoGe Document Generator",
+    "url": "https://github.com/Travvy88/DocumentGenerator_DoGe",
+    "stage": "markup-rendering",
+    "output": "Synthetic document pages with tables, text, and bounding boxes",
+    "bestFor": "Generating table-bearing page layouts and detection annotations",
+    "provenance": "community"
+  },
+  {
+    "id": "synthetic-ocr-image-generator",
+    "name": "Synthetic OCR Image Generator",
+    "url": "https://github.com/junyeong-nero/synthetic-ocr-image-generator",
+    "stage": "markup-rendering",
+    "output": "Table images with Markdown and JSON ground truth",
+    "bestFor": "Quick OCR and TSR corpus generation from configurable templates",
+    "provenance": "community"
+  },
+  {
+    "id": "tablevqabench",
+    "name": "TableVQA-Bench",
+    "url": "https://github.com/naver-ai/tablevqabench",
+    "stage": "augmentation-validation",
+    "output": "Controlled table visualizations and visual QA evaluations",
+    "bestFor": "Testing whether synthetic styles preserve content and reasoning difficulty",
+    "provenance": "official"
+  }
+]
