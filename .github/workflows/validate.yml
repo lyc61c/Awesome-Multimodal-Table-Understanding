@@ -17,27 +17,24 @@ jobs:
         with:
           node-version: 22
 
-      - name: Validate pull request output
-        if: github.event_name == 'pull_request'
-        run: npm run check
+      - name: Validate bibliography data
+        run: node scripts/validate.mjs
 
-      - name: Build generated bibliography
-        if: github.event_name == 'push'
+      - name: Build generated README
         run: npm run build
 
-      - name: Validate generated bibliography
-        if: github.event_name == 'push'
+      - name: Check generated README
         run: npm run check
 
-      - name: Commit generated files
+      - name: Commit generated README
         if: github.event_name == 'push'
         run: |
-          if git diff --quiet -- README.md RELATED.md; then
-            echo "Generated files are already up to date."
+          if git diff --quiet -- README.md; then
+            echo "README.md is already up to date."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md RELATED.md
+          git add README.md
           git commit -m "refresh generated bibliography [skip ci]"
           git push
